@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoDownloader Addon - API Tester</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .section h2 {
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="url"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input[type="url"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .btn.success {
+            background-color: #27ae60;
+        }
+        .btn.success:hover {
+            background-color: #229954;
+        }
+        .btn.stop {
+            background-color: #f39c12;
+        }
+        .btn.stop:hover {
+            background-color: #e67e22;
+        }
+        .btn.quit {
+            background-color: #e74c3c;
+        }
+        .btn.quit:hover {
+            background-color: #c0392b;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .status-info {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #dee2e6;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-family: 'Courier New', monospace;
+        }
+        .response.success {
+            background-color: #d5f4e6;
+            border: 1px solid #27ae60;
+            color: #1e7e34;
+        }
+        .response.error {
+            background-color: #f8d7da;
+            border: 1px solid #dc3545;
+            color: #721c24;
+        }
+        .response.loading {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+        }
+        .api-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .endpoint {
+            font-family: 'Courier New', monospace;
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .method {
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .method.post {
+            background-color: #28a745;
+        }
+        .method.get {
+            background-color: #007bff;
+        }
+        .log {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border: 1px solid #dee2e6;
+        }
+        .log-entry {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .log-entry.request {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+        .log-entry.success {
+            background-color: #e8f5e8;
+            border-left: 4px solid #4caf50;
+        }
+        .log-entry.error {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+        }
+        .timestamp {
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 NeoDownloader Addon</h1>
+        <p class="subtitle">Interface for testing NeoDownloader Addon REST API</p>
+
+        <div class="section">
+            <h2>📊 API Information</h2>
+            <div class="api-info">
+                <p><strong>Base URL:</strong> <span class="endpoint" id="baseUrl">http://localhost:8001</span></p>
+                <p><strong>Available endpoints:</strong></p>
+                <ul>
+                    <li><span class="method post">POST</span><span class="endpoint">/parse</span> - Parse URL (add to queue)</li>
+                    <li><span class="method get">GET</span><span class="endpoint">/queue/status</span> - Queue processing status</li>
+                    <li><span class="method post">POST</span><span class="endpoint">/stop</span> - Stop processing and clear queue</li>
+                    <li><span class="method post">POST</span><span class="endpoint">/quit</span> - Stop and shutdown service</li>
+                    <li><span class="method get">GET</span><span class="endpoint">/health</span> - Service health check</li>
+                    <li><span class="method get">GET</span><span class="endpoint">/</span> - This page</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🌐 URL Parsing Test</h2>
+            <form id="parseForm">
+                <div class="form-group">
+                    <label for="url">URL to parse:</label>
+                    <input type="url" id="url" placeholder="https://example.com/video-or-article" required>
+                </div>
+                <button type="submit" class="btn" id="parseBtn">🔍 Send for parsing</button>
+            </form>
+            <div id="parseResponse" class="response"></div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Queue Management</h2>
+            <div class="status-info" id="queueStatus">
+                Queue status: <span id="statusText">Loading...</span>
+            </div>
+            <div class="controls">
+                <button class="btn success" id="statusBtn">📊 Check queue status</button>
+                <button class="btn stop" id="stopBtn">⏹️ Stop processing</button>
+                <button class="btn quit" id="quitBtn">🔴 Shutdown service</button>
+                <button class="btn success" id="healthBtn">🏥 Check /health</button>
+            </div>
+            <div id="controlResponse" class="response"></div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Request Log</h2>
+            <div id="requestLog" class="log">
+                <div class="log-entry">
+                    <span class="timestamp">Initializing...</span><br>
+                    Ready to work with API
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = window.location.origin;
+        document.getElementById('baseUrl').textContent = baseUrl;
+
+        function logRequest(type, message) {
+            const log = document.getElementById('requestLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="timestamp">[${timestamp}]</span><br>${message}`;
+            
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function showResponse(elementId, message, type) {
+            const responseDiv = document.getElementById(elementId);
+            responseDiv.textContent = message;
+            responseDiv.className = `response ${type}`;
+            responseDiv.style.display = 'block';
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    responseDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    return { success: true, data, status: response.status };
+                } else {
+                    return { success: false, error: data, status: response.status };
+                }
+            } catch (error) {
+                return { success: false, error: { detail: error.message }, status: 0 };
+            }
+        }
+
+        // Parse form handler
+        document.getElementById('parseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const urlInput = document.getElementById('url');
+            const parseBtn = document.getElementById('parseBtn');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                showResponse('parseResponse', 'Enter a valid URL', 'error');
+                return;
+            }
+
+            parseBtn.disabled = true;
+            parseBtn.textContent = '⏳ Processing...';
+            showResponse('parseResponse', 'Sending request to server...', 'loading');
+            
+            logRequest('request', `POST /parse - URL: ${url}`);
+            
+            const result = await makeRequest(`${baseUrl}/parse`, {
+                method: 'POST',
+                body: JSON.stringify({ url })
+            });
+
+            parseBtn.disabled = false;
+            parseBtn.textContent = '🔍 Send for parsing';
+
+            if (result.success) {
+                const message = `✅ Success: ${result.data.message} (Queue size: ${result.data.queue_size || 0})`;
+                showResponse('parseResponse', message, 'success');
+                logRequest('success', `✅ ${result.data.message} (queue: ${result.data.queue_size || 0})`);
+                urlInput.value = '';
+                updateQueueStatus();
+            } else {
+                const errorMsg = result.error.detail || 'Unknown error';
+                const message = `❌ Error (${result.status}): ${errorMsg}`;
+                showResponse('parseResponse', message, 'error');
+                logRequest('error', `❌ Error ${result.status}: ${errorMsg}`);
+            }
+        });
+
+        // Update queue status function
+        async function updateQueueStatus() {
+            try {
+                const result = await makeRequest(`${baseUrl}/queue/status`);
+                if (result.success) {
+                    const status = result.data;
+                    const statusText = document.getElementById('statusText');
+                    statusText.textContent = `${status.status} (${status.queue_size} in queue)`;
+                    statusText.style.color = status.is_processing ? '#e67e22' : '#27ae60';
+                } else {
+                    document.getElementById('statusText').textContent = 'Error getting status';
+                }
+            } catch (error) {
+                document.getElementById('statusText').textContent = 'Unavailable';
+            }
+        }
+
+        // Queue status check handler
+        document.getElementById('statusBtn').addEventListener('click', async () => {
+            const statusBtn = document.getElementById('statusBtn');
+            
+            statusBtn.disabled = true;
+            statusBtn.textContent = '⏳ Loading...';
+            showResponse('controlResponse', 'Getting queue status...', 'loading');
+            
+            logRequest('request', 'GET /queue/status');
+            
+            const result = await makeRequest(`${baseUrl}/queue/status`);
+
+            statusBtn.disabled = false;
+            statusBtn.textContent = '📊 Check queue status';
+
+            if (result.success) {
+                const status = result.data;
+                const message = `📊 Status: ${status.status}, Queue size: ${status.queue_size}, Processing: ${status.is_processing ? 'Yes' : 'No'}`;
+                showResponse('controlResponse', message, 'success');
+                logRequest('success', `📊 Queue status: ${status.status} (${status.queue_size})`);
+                updateQueueStatus();
+            } else {
+                const errorMsg = result.error.detail || 'Error getting status';
+                const message = `❌ Error (${result.status}): ${errorMsg}`;
+                showResponse('controlResponse', message, 'error');
+                logRequest('error', `❌ Error getting status: ${errorMsg}`);
+            }
+        });
+
+        // Stop processing handler
+        document.getElementById('stopBtn').addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to stop processing and clear the queue?')) {
+                return;
+            }
+            
+            const stopBtn = document.getElementById('stopBtn');
+            
+            stopBtn.disabled = true;
+            stopBtn.textContent = '⏳ Stopping...';
+            showResponse('controlResponse', 'Stopping processing...', 'loading');
+            
+            logRequest('request', 'POST /stop');
+            
+            const result = await makeRequest(`${baseUrl}/stop`, { method: 'POST' });
+
+            stopBtn.disabled = false;
+            stopBtn.textContent = '⏹️ Stop processing';
+
+            if (result.success) {
+                const message = `⏹️ ${result.data.message} (Cleared URLs: ${result.data.cleared_urls})`;
+                showResponse('controlResponse', message, 'success');
+                logRequest('success', `⏹️ Processing stopped, cleared: ${result.data.cleared_urls}`);
+                updateQueueStatus();
+            } else {
+                const errorMsg = result.error.detail || 'Stop error';
+                const message = `❌ Error (${result.status}): ${errorMsg}`;
+                showResponse('controlResponse', message, 'error');
+                logRequest('error', `❌ Stop error: ${errorMsg}`);
+            }
+        });
+
+        // Quit service handler
+        document.getElementById('quitBtn').addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to SHUTDOWN the service? This will stop the entire server!')) {
+                return;
+            }
+            
+            const quitBtn = document.getElementById('quitBtn');
+            
+            quitBtn.disabled = true;
+            quitBtn.textContent = '⏳ Shutting down...';
+            showResponse('controlResponse', 'Shutting down service...', 'loading');
+            
+            logRequest('request', 'POST /quit');
+            
+            const result = await makeRequest(`${baseUrl}/quit`, { method: 'POST' });
+
+            quitBtn.disabled = false;
+            quitBtn.textContent = '🔴 Shutdown service';
+
+            if (result.success) {
+                const message = `🔴 ${result.data.message} (Cleared URLs: ${result.data.cleared_urls})`;
+                showResponse('controlResponse', message, 'success');
+                logRequest('success', `🔴 Service shutting down, cleared: ${result.data.cleared_urls}`);
+                
+                // Show shutdown message
+                setTimeout(() => {
+                    showResponse('controlResponse', '💀 Service has shut down', 'error');
+                    document.getElementById('statusText').textContent = 'Service stopped';
+                }, 2000);
+            } else {
+                const errorMsg = result.error.detail || 'Shutdown error';
+                const message = `❌ Error (${result.status}): ${errorMsg}`;
+                showResponse('controlResponse', message, 'error');
+                logRequest('error', `❌ Shutdown error: ${errorMsg}`);
+            }
+        });
+
+        // Health check handler
+        document.getElementById('healthBtn').addEventListener('click', async () => {
+            const healthBtn = document.getElementById('healthBtn');
+            
+            healthBtn.disabled = true;
+            healthBtn.textContent = '⏳ Checking...';
+            showResponse('controlResponse', 'Checking service status...', 'loading');
+            
+            logRequest('request', 'GET /health');
+            
+            const result = await makeRequest(`${baseUrl}/health`);
+
+            healthBtn.disabled = false;
+            healthBtn.textContent = '🏥 Check /health';
+
+            if (result.success) {
+                const message = `✅ Service running: ${result.data.service} (${result.data.status})`;
+                showResponse('controlResponse', message, 'success');
+                logRequest('success', `✅ Health check OK: ${result.data.service}`);
+            } else {
+                const errorMsg = result.error.detail || 'Service unavailable';
+                const message = `❌ Error (${result.status}): ${errorMsg}`;
+                showResponse('controlResponse', message, 'error');
+                logRequest('error', `❌ Health check failed: ${errorMsg}`);
+            }
+        });
+
+        // Auto-check on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('healthBtn').click();
+                updateQueueStatus();
+            }, 1000);
+            
+            // Update queue status every 5 seconds
+            setInterval(updateQueueStatus, 5000);
+        });
+    </script>
+</body>
+</html>
