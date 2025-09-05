@@ -1,16 +1,16 @@
 # Addon for NeoDownloader - GUI for yt-dlp and gallery-dl
 
-REST API addon for [NeoDownloader](https://neodownloader.com) - a free Windows bulk media downloader that provides GUI interface for gallery-dl and yt-dlp. This addon extends NeoDownloader's capabilities by integrating these engines, providing support for 1000+ additional websites through a unified API with async queue management.
+REST API addon for [NeoDownloader](https://www.neodownloader.com) - a free Windows bulk media downloader that provides GUI interface for gallery-dl and yt-dlp. This addon extends NeoDownloader's capabilities by integrating these engines, providing support for 1000+ additional websites through a unified API with async queue management.
 
 ## Features
 
-🚀 **Unified Interface** - Single API for both yt-dlp and gallery-dl downloaders
-⚡ **Async Processing** - Non-blocking queue-based download management
-🛑 **Stop/Resume** - Full control over download processes
-🌐 **RESTful API** - Easy integration via HTTP endpoints
-🔧 **Download Engine Extension** - Extends NeoDownloader with gallery-dl and yt-dlp support
-🎯 **Smart Detection** - Automatic tool selection based on URL domain
-📊 **Progress Tracking** - Real-time download status and completion events
+🚀 **Unified Interface** - Single API for both yt-dlp and gallery-dl downloaders  
+⚡ **Async Processing** - Non-blocking queue-based download management  
+🛑 **Stop/Resume** - Full control over download processes  
+🌐 **RESTful API** - Easy integration via HTTP endpoints  
+🔧 **Download Engine Extension** - Extends NeoDownloader with gallery-dl and yt-dlp support  
+🎯 **Smart Detection** - Automatic tool selection based on URL domain  
+📊 **Progress Tracking** - Real-time download status and completion events  
 
 ## Architecture
 
@@ -109,7 +109,7 @@ The addon automatically detects the best download tool based on URL:
 
 ## Integration with NeoDownloader
 
-This addon extends [NeoDownloader](https://neodownloader.com) - a Windows bulk media downloader that provides GUI interface for gallery-dl and yt-dlp among other capabilities. The addon provides additional engine support by integrating:
+This addon extends [NeoDownloader](https://www.neodownloader.com) - a Windows bulk media downloader that provides GUI interface for gallery-dl and yt-dlp among other capabilities. The addon provides additional engine support by integrating:
 
 - **gallery-dl engine** - Support for 100+ art/image platforms (Instagram, Twitter, DeviantArt, etc.)
 - **yt-dlp engine** - Support for 1000+ video platforms (YouTube, TikTok, Vimeo, etc.) 
@@ -150,7 +150,7 @@ This project is licensed under the GPL-2.0 License - see the [LICENSE](LICENSE) 
 
 ## Links
 
-- **NeoDownloader**: https://neodownloader.com
+- **NeoDownloader**: https://www.neodownloader.com
 - **gallery-dl**: https://github.com/mikf/gallery-dl  
 - **yt-dlp**: https://github.com/yt-dlp/yt-dlp
 
